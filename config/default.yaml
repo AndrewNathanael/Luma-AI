@@ -1,0 +1,60 @@
+# Default configuration for rPPG-based stress estimation.
+# Copy this file, adjust paths, then pass it to the scripts with --config.
+
+video:
+  fps_override: null
+  max_frames: null
+  use_opencl: false
+  roi_backend: mediapipe
+  roi_regions: [forehead, left_cheek, right_cheek]
+  camera_flip: horizontal
+
+rppg:
+  method: pos        # green, chrom, or pos
+  bandpass_low_hz: 0.7
+  bandpass_high_hz: 4.0
+  pos_window_seconds: 1.6
+  chrom_window_seconds: 1.6
+
+features:
+  window_seconds: 60.0
+  step_seconds: 10.0
+  interpolate_rate_hz: 4.0
+  min_valid_beats: 10
+
+labels:
+  mode: multiclass   # binary or multiclass
+  # Binary mapping recommended for first experiment:
+  # rest -> 0, speech/arithmetic -> 1
+  binary:
+    rest: 0
+    baseline: 0
+    t1: 0
+    speech: 1
+    t2: 1
+    arithmetic: 1
+    t3: 1
+    stress: 1
+  multiclass:
+    rest: 0
+    baseline: 0
+    t1: 0
+    speech: 1
+    t2: 1
+    arithmetic: 2
+    t3: 2
+
+training:
+  model: random_forest    # logistic_regression, svm, random_forest
+  validation: subject_split # subject_split or loso
+  validation_size: 0.2
+  test_size: 0.2
+  random_state: 42
+  # Keep signal-quality columns for reporting, but exclude them from the
+  # physiology-only classifier so it learns PRV/HRV patterns, not camera quality.
+  exclude_features:
+    - detection_rate
+    - snr_proxy
+    - hr_psd_quality
+    - fps
+  feature_importance_out: results/feature_importance_random_forest.csv

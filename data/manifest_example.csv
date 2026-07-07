@@ -1,0 +1,4 @@
+subject_id,video_path,condition,task,dataset
+s1,/absolute/path/to/UBFC-Phys/s1/vid_s1_T1.avi,rest,T1,UBFC-Phys
+s1,/absolute/path/to/UBFC-Phys/s1/vid_s1_T2.avi,speech,T2,UBFC-Phys
+s1,/absolute/path/to/UBFC-Phys/s1/vid_s1_T3.avi,arithmetic,T3,UBFC-Phys

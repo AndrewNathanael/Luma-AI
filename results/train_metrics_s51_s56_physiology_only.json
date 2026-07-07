@@ -1,0 +1,201 @@
+{
+  "split": {
+    "train_subjects": [
+      "s53",
+      "s54",
+      "s56"
+    ],
+    "validation_subjects": [
+      "s55"
+    ],
+    "test_subjects": [
+      "s51",
+      "s52"
+    ],
+    "n_train_samples": 117,
+    "n_validation_samples": 39,
+    "n_test_samples": 78,
+    "n_train_subjects": 3,
+    "n_validation_subjects": 1,
+    "n_test_subjects": 2,
+    "n_final_train_samples": 156
+  },
+  "validation_metrics": {
+    "n_samples": 39,
+    "labels": [
+      0,
+      1
+    ],
+    "accuracy": 0.5384615384615384,
+    "precision_macro": 0.3088235294117647,
+    "recall_macro": 0.40384615384615385,
+    "f1_macro": 0.35,
+    "precision_weighted": 0.4117647058823529,
+    "recall_weighted": 0.5384615384615384,
+    "f1_weighted": 0.4666666666666667,
+    "confusion_matrix": [
+      [
+        0,
+        13
+      ],
+      [
+        5,
+        21
+      ]
+    ],
+    "classification_report": {
+      "0": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 13.0
+      },
+      "1": {
+        "precision": 0.6176470588235294,
+        "recall": 0.8076923076923077,
+        "f1-score": 0.7,
+        "support": 26.0
+      },
+      "accuracy": 0.5384615384615384,
+      "macro avg": {
+        "precision": 0.3088235294117647,
+        "recall": 0.40384615384615385,
+        "f1-score": 0.35,
+        "support": 39.0
+      },
+      "weighted avg": {
+        "precision": 0.4117647058823529,
+        "recall": 0.5384615384615384,
+        "f1-score": 0.4666666666666667,
+        "support": 39.0
+      }
+    },
+    "roc_auc": 0.3076923076923077,
+    "subjects": [
+      {
+        "subject_id": "s55",
+        "n_samples": 39,
+        "accuracy": 0.5384615384615384,
+        "f1_macro": 0.35
+      }
+    ]
+  },
+  "test_metrics": {
+    "n_samples": 78,
+    "labels": [
+      0,
+      1
+    ],
+    "accuracy": 0.9871794871794872,
+    "precision_macro": 0.9905660377358491,
+    "recall_macro": 0.9807692307692308,
+    "f1_macro": 0.9854341736694678,
+    "precision_weighted": 0.9874213836477989,
+    "recall_weighted": 0.9871794871794872,
+    "f1_weighted": 0.9871148459383753,
+    "confusion_matrix": [
+      [
+        25,
+        1
+      ],
+      [
+        0,
+        52
+      ]
+    ],
+    "classification_report": {
+      "0": {
+        "precision": 1.0,
+        "recall": 0.9615384615384616,
+        "f1-score": 0.9803921568627451,
+        "support": 26.0
+      },
+      "1": {
+        "precision": 0.9811320754716981,
+        "recall": 1.0,
+        "f1-score": 0.9904761904761905,
+        "support": 52.0
+      },
+      "accuracy": 0.9871794871794872,
+      "macro avg": {
+        "precision": 0.9905660377358491,
+        "recall": 0.9807692307692308,
+        "f1-score": 0.9854341736694678,
+        "support": 78.0
+      },
+      "weighted avg": {
+        "precision": 0.9874213836477989,
+        "recall": 0.9871794871794872,
+        "f1-score": 0.9871148459383753,
+        "support": 78.0
+      }
+    },
+    "roc_auc": 0.9992603550295858,
+    "subjects": [
+      {
+        "subject_id": "s51",
+        "n_samples": 39,
+        "accuracy": 1.0,
+        "f1_macro": 1.0
+      },
+      {
+        "subject_id": "s52",
+        "n_samples": 39,
+        "accuracy": 0.9743589743589743,
+        "f1_macro": 0.970566037735849
+      }
+    ]
+  },
+  "accuracy": 0.9871794871794872,
+  "f1_macro": 0.9854341736694678,
+  "precision_macro": 0.9905660377358491,
+  "recall_macro": 0.9807692307692308,
+  "train_subjects": [
+    "s53",
+    "s54",
+    "s56"
+  ],
+  "validation_subjects": [
+    "s55"
+  ],
+  "test_subjects": [
+    "s51",
+    "s52"
+  ],
+  "n_train_samples": 117,
+  "n_validation_samples": 39,
+  "n_test_samples": 78,
+  "n_train_subjects": 3,
+  "n_validation_subjects": 1,
+  "n_test_subjects": 2,
+  "n_final_train_samples": 156,
+  "feature_columns": [
+    "mean_hr_bpm",
+    "n_peaks",
+    "peak_rate_per_sec",
+    "ibi_mean_ms",
+    "ibi_median_ms",
+    "ibi_std_ms",
+    "sdnn_ms",
+    "rmssd_ms",
+    "pnn50",
+    "prv_mean_hr_bpm",
+    "prv_min_hr_bpm",
+    "prv_max_hr_bpm",
+    "lf_power",
+    "hf_power",
+    "lf_hf_ratio",
+    "total_power",
+    "sd1_ms",
+    "sd2_ms",
+    "sd1_sd2_ratio"
+  ],
+  "excluded_features": [
+    "detection_rate",
+    "fps",
+    "hr_psd_quality",
+    "snr_proxy"
+  ],
+  "model_name": "random_forest",
+  "validation": "subject_split"
+}

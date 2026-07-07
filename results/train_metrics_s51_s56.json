@@ -1,0 +1,199 @@
+{
+  "split": {
+    "train_subjects": [
+      "s53",
+      "s54",
+      "s56"
+    ],
+    "validation_subjects": [
+      "s55"
+    ],
+    "test_subjects": [
+      "s51",
+      "s52"
+    ],
+    "n_train_samples": 117,
+    "n_validation_samples": 39,
+    "n_test_samples": 78,
+    "n_train_subjects": 3,
+    "n_validation_subjects": 1,
+    "n_test_subjects": 2,
+    "n_final_train_samples": 156
+  },
+  "validation_metrics": {
+    "n_samples": 39,
+    "labels": [
+      0,
+      1
+    ],
+    "accuracy": 0.358974358974359,
+    "precision_macro": 0.25925925925925924,
+    "recall_macro": 0.2692307692307692,
+    "f1_macro": 0.2641509433962264,
+    "precision_weighted": 0.345679012345679,
+    "recall_weighted": 0.358974358974359,
+    "f1_weighted": 0.35220125786163525,
+    "confusion_matrix": [
+      [
+        0,
+        13
+      ],
+      [
+        12,
+        14
+      ]
+    ],
+    "classification_report": {
+      "0": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 13.0
+      },
+      "1": {
+        "precision": 0.5185185185185185,
+        "recall": 0.5384615384615384,
+        "f1-score": 0.5283018867924528,
+        "support": 26.0
+      },
+      "accuracy": 0.358974358974359,
+      "macro avg": {
+        "precision": 0.25925925925925924,
+        "recall": 0.2692307692307692,
+        "f1-score": 0.2641509433962264,
+        "support": 39.0
+      },
+      "weighted avg": {
+        "precision": 0.345679012345679,
+        "recall": 0.358974358974359,
+        "f1-score": 0.35220125786163525,
+        "support": 39.0
+      }
+    },
+    "roc_auc": 0.2692307692307693,
+    "subjects": [
+      {
+        "subject_id": "s55",
+        "n_samples": 39,
+        "accuracy": 0.358974358974359,
+        "f1_macro": 0.2641509433962264
+      }
+    ]
+  },
+  "test_metrics": {
+    "n_samples": 78,
+    "labels": [
+      0,
+      1
+    ],
+    "accuracy": 0.9487179487179487,
+    "precision_macro": 0.9642857142857143,
+    "recall_macro": 0.9230769230769231,
+    "f1_macro": 0.9398148148148148,
+    "precision_weighted": 0.9523809523809523,
+    "recall_weighted": 0.9487179487179487,
+    "f1_weighted": 0.9475308641975309,
+    "confusion_matrix": [
+      [
+        22,
+        4
+      ],
+      [
+        0,
+        52
+      ]
+    ],
+    "classification_report": {
+      "0": {
+        "precision": 1.0,
+        "recall": 0.8461538461538461,
+        "f1-score": 0.9166666666666666,
+        "support": 26.0
+      },
+      "1": {
+        "precision": 0.9285714285714286,
+        "recall": 1.0,
+        "f1-score": 0.9629629629629629,
+        "support": 52.0
+      },
+      "accuracy": 0.9487179487179487,
+      "macro avg": {
+        "precision": 0.9642857142857143,
+        "recall": 0.9230769230769231,
+        "f1-score": 0.9398148148148148,
+        "support": 78.0
+      },
+      "weighted avg": {
+        "precision": 0.9523809523809523,
+        "recall": 0.9487179487179487,
+        "f1-score": 0.9475308641975309,
+        "support": 78.0
+      }
+    },
+    "roc_auc": 0.9970414201183432,
+    "subjects": [
+      {
+        "subject_id": "s51",
+        "n_samples": 39,
+        "accuracy": 1.0,
+        "f1_macro": 1.0
+      },
+      {
+        "subject_id": "s52",
+        "n_samples": 39,
+        "accuracy": 0.8974358974358975,
+        "f1_macro": 0.8733766233766234
+      }
+    ]
+  },
+  "accuracy": 0.9487179487179487,
+  "f1_macro": 0.9398148148148148,
+  "precision_macro": 0.9642857142857143,
+  "recall_macro": 0.9230769230769231,
+  "train_subjects": [
+    "s53",
+    "s54",
+    "s56"
+  ],
+  "validation_subjects": [
+    "s55"
+  ],
+  "test_subjects": [
+    "s51",
+    "s52"
+  ],
+  "n_train_samples": 117,
+  "n_validation_samples": 39,
+  "n_test_samples": 78,
+  "n_train_subjects": 3,
+  "n_validation_subjects": 1,
+  "n_test_subjects": 2,
+  "n_final_train_samples": 156,
+  "feature_columns": [
+    "mean_hr_bpm",
+    "hr_psd_quality",
+    "snr_proxy",
+    "n_peaks",
+    "peak_rate_per_sec",
+    "ibi_mean_ms",
+    "ibi_median_ms",
+    "ibi_std_ms",
+    "sdnn_ms",
+    "rmssd_ms",
+    "pnn50",
+    "prv_mean_hr_bpm",
+    "prv_min_hr_bpm",
+    "prv_max_hr_bpm",
+    "lf_power",
+    "hf_power",
+    "lf_hf_ratio",
+    "total_power",
+    "sd1_ms",
+    "sd2_ms",
+    "sd1_sd2_ratio",
+    "fps",
+    "detection_rate"
+  ],
+  "model_name": "random_forest",
+  "validation": "subject_split"
+}

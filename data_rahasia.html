@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowchart Sistem Klasifikasi Stres Berbasis rPPG</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary: #1a56db;
+            --primary-light: #e8effd;
+            --accent: #7c3aed;
+            --cv-color: #1565C0;
+            --cv-bg: #E3F2FD;
+            --signal-color: #E65100;
+            --signal-bg: #FFF3E0;
+            --feature-color: #7B1FA2;
+            --feature-bg: #F3E5F5;
+            --ml-color: #2E7D32;
+            --ml-bg: #E8F5E9;
+            --text: #1e293b;
+            --text-secondary: #475569;
+            --border: #e2e8f0;
+            --bg: #ffffff;
+            --bg-subtle: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.7;
+            font-size: 11pt;
+        }
+
+        .container {
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20mm 18mm;
+        }
+
+        /* ===== HEADER ===== */
+        .doc-header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .doc-header h1 {
+            font-size: 18pt;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .doc-header .subtitle {
+            font-size: 11pt;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* ===== SECTIONS ===== */
+        h2 {
+            font-size: 14pt;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 32px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            font-size: 12pt;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+
+        h4 {
+            font-size: 11pt;
+            font-weight: 600;
+            margin-top: 16px;
+            margin-bottom: 8px;
+        }
+
+        p {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        /* ===== PHASE BADGES ===== */
+        .phase-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 9pt;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .phase-badge.cv { background: var(--cv-bg); color: var(--cv-color); }
+        .phase-badge.signal { background: var(--signal-bg); color: var(--signal-color); }
+        .phase-badge.feature { background: var(--feature-bg); color: var(--feature-color); }
+        .phase-badge.ml { background: var(--ml-bg); color: var(--ml-color); }
+
+        /* ===== TABLES ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px 0;
+            font-size: 9.5pt;
+        }
+
+        thead th {
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            text-align: left;
+            padding: 8px 10px;
+            font-size: 9pt;
+        }
+
+        thead th:first-child {
+            border-radius: 6px 0 0 0;
+        }
+
+        thead th:last-child {
+            border-radius: 0 6px 0 0;
+        }
+
+        tbody td {
+            padding: 7px 10px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) {
+            background: var(--bg-subtle);
+        }
+
+        tbody tr:hover {
+            background: var(--primary-light);
+        }
+
+        .domain-label {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* ===== MERMAID DIAGRAMS ===== */
+        .diagram-wrapper {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .diagram-wrapper .mermaid {
+            max-width: 100%;
+        }
+
+        .diagram-caption {
+            text-align: center;
+            font-size: 9.5pt;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 8px;
+            margin-bottom: 20px;
+        }
+
+        /* ===== NOTE BOX ===== */
+        .note-box {
+            background: #FFFDE7;
+            border-left: 4px solid #F9A825;
+            padding: 12px 16px;
+            margin: 16px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 9.5pt;
+        }
+
+        .note-box strong {
+            color: #F57F17;
+        }
+
+        /* ===== CORRECTION TABLE ===== */
+        .correction-old {
+            color: #C62828;
+            text-decoration: line-through;
+            font-size: 9pt;
+        }
+
+        .correction-new {
+            color: #2E7D32;
+            font-weight: 600;
+        }
+
+        /* ===== DOWNLOAD BAR ===== */
+        .download-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #1a56db, #7c3aed);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+
+        .download-bar p {
+            color: rgba(255,255,255,0.9);
+            font-size: 10pt;
+            margin: 0;
+        }
+
+        .download-bar button {
+            background: #fff;
+            color: var(--primary);
+            border: none;
+            padding: 8px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 10pt;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: transform 0.15s;
+        }
+
+        .download-bar button:hover {
+            transform: scale(1.05);
+        }
+
+        .spacer-for-bar {
+            height: 56px;
+        }
+
+        s
+        .page-break {
+            page-break-before: always;
+        }
+
+
+        @media print {
+            .download-bar, .spacer-for-bar {
+                display: none !important;
+            }
+
+            body {
+                font-size: 10pt;
+            }
+
+            .container {
+                max-width: 100%;
+                padding: 10mm 15mm;
+            }
+
+            h2 {
+                page-break-after: avoid;
+            }
+
+            table, .diagram-wrapper {
+                page-break-inside: avoid;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="container">
+    <div class="doc-header">
+        <h1>Flowchart Sistem Klasifikasi Tingkat Stres<br>Berbasis Remote Photoplethysmography (rPPG)</h1>
+        <div class="subtitle" style="color: #C62828; text-decoration: double;">Dokumen Rahasia Luma AI. (Dilarang Disebrkan)</div>
+        <div style="color: #C62828; text-decoration: double;">Jika Ketahuan Maka Akan Dikutuk Jadi No 15 atau 17 Bebas Dipilih</div>
+        <div style="color: #C62828; text-decoration: double;">#Stopjudol | #Stoptidur | #Stopmerasapenting | #Stopmalas | #carikemampuanlo</div>
+    </div>
+
+    <h2>1. Flowchart Utama Sistem</h2>
+    <p>Diagram berikut menunjukkan alur proses keseluruhan sistem klasifikasi stres berbasis rPPG, dari input video wajah hingga output klasifikasi tingkat stres.</p>
+
+    <div class="diagram-wrapper">
+        <div class="mermaid">
+flowchart TD
+    START(("Mulai"))
+
+    START --> INPUT["<b>Input:</b> Rekaman Video Wajah<br/>(Dataset UBFC-Phys, N Subjek)"]
+
+    INPUT --> SCENARIO["<b>Pengaturan Skenario:</b><br/>Kondisi Fisiologis<br/>(Rest/T1, Speech/T2, Arithmetic/T3)"]
+
+    SCENARIO --> LANDMARK["Pemetaan 478 Landmark Wajah<br/>(MediaPipe FaceLandmarker)"]
+
+    LANDMARK --> ROI["Isolasi ROI Wajah dengan<br/>Polygon Boundary Masking per-Region<br/>(Dahi, Pipi Kiri, Pipi Kanan)"]
+
+    ROI --> SKIN["Skin Filtering dengan<br/>Konversi Ruang Warna BGR ke YCrCb"]
+
+    SKIN --> MEAN_RGB["Komputasi Rata-Rata Spasial RGB<br/>dari Piksel Kulit Valid per Frame"]
+
+    MEAN_RGB --> POS["Ekstraksi Sinyal BVP Mentah<br/>dengan Algoritma POS<br/>(Overlap-Add Windowing 1.6 detik)"]
+
+    POS --> BPF["Penyaringan Sinyal<br/>(Butterworth Bandpass Filter<br/>0.7 – 4.0 Hz, Order 4, Zero-Phase SOS)"]
+
+    BPF --> SEG["Segmentasi Sinyal<br/>(Sliding Window 60 Detik, Step 10 Detik)"]
+
+    SEG --> PEAK["Deteksi Puncak &<br/>Validasi Batas IBI (0.30 – 2.00 detik)"]
+
+    PEAK --> BEAT_CHECK{"Jumlah Beat<br/>≥ 10?"}
+
+    BEAT_CHECK -- Ya --> FEAT["Komputasi Fitur PRV/HRV<br/>Multi-Domain"]
+    BEAT_CHECK -- Tidak --> FEAT_NAN["Set Fitur PRV/HRV = NaN"]
+
+    FEAT --> QC{"Kualitas Sinyal<br/>> 0.60?"}
+    FEAT_NAN --> QC
+
+    QC -- Tidak --> OUT_POOR["Output: Poor Signal"]
+    QC -- Ya --> DET{"Detection Rate<br/>≥ 0.90?"}
+
+    DET -- Tidak --> OUT_FACE["Output: Face Not Stable"]
+    DET -- Ya --> RF["Klasifikasi Tingkat Stres<br/>(Random Forest, 300 Trees)<br/>Pipeline: Imputer → Scaler → RF"]
+
+    RF --> CONF{"Confidence ≥ 0.60<br/>DAN Quality ≥ 0.70?"}
+
+    CONF -- Ya --> OUT_FINAL["<b>Output Klasifikasi Final:</b><br/>Normal / Moderate / High Arousal"]
+    CONF -- Tidak --> OUT_UNCERTAIN["Output: Uncertain"]
+
+    OUT_FINAL --> DISPLAY["Tampilkan Hasil pada HUD"]
+    OUT_UNCERTAIN --> DISPLAY
+
+    OUT_POOR --> RETRY["Ulangi Akuisisi Sinyal"]
+    OUT_FACE --> RETRY
+
+    DISPLAY --> LOOP{"Lanjut<br/>Monitoring?"}
+    LOOP -- Ya --> RETRY
+    LOOP -- Tidak --> STOP(("Selesai"))
+    RETRY --> SEG
+
+    style START fill:#4CAF50,stroke:#388E3C,color:#fff
+    style STOP fill:#F44336,stroke:#D32F2F,color:#fff
+    style LANDMARK fill:#E3F2FD,stroke:#1565C0
+    style ROI fill:#E3F2FD,stroke:#1565C0
+    style SKIN fill:#E3F2FD,stroke:#1565C0
+    style MEAN_RGB fill:#E3F2FD,stroke:#1565C0
+    style POS fill:#FFF3E0,stroke:#E65100
+    style BPF fill:#FFF3E0,stroke:#E65100
+    style SEG fill:#F3E5F5,stroke:#7B1FA2
+    style PEAK fill:#F3E5F5,stroke:#7B1FA2
+    style FEAT fill:#F3E5F5,stroke:#7B1FA2
+    style FEAT_NAN fill:#FFEBEE,stroke:#C62828
+    style RF fill:#E8F5E9,stroke:#2E7D32
+    style OUT_FINAL fill:#C8E6C9,stroke:#2E7D32,color:#1B5E20
+    style OUT_UNCERTAIN fill:#FFF9C4,stroke:#F9A825,color:#6D4C00
+    style OUT_POOR fill:#FFCDD2,stroke:#C62828,color:#B71C1C
+    style OUT_FACE fill:#FFCDD2,stroke:#C62828,color:#B71C1C
+    style DISPLAY fill:#E0F7FA,stroke:#00838F
+        </div>
+    </div>
+    <div class="diagram-caption">Gambar 1 — Flowchart utama sistem klasifikasi stres berbasis rPPG (end-to-end)</div>
+
+    <!-- ===== 2. FASE COMPUTER VISION ===== -->
+    <div class="page-break"></div>
+    <h2>2. Penjelasan Detail Setiap Fase</h2>
+
+    <h3><span class="phase-badge cv">Fase 1</span> Computer Vision</h3>
+
+    <div class="diagram-wrapper">
+        <div class="mermaid">
+flowchart LR
+    A["Frame Video<br/>(BGR)"] --> B["MediaPipe<br/>FaceLandmarker<br/>(478 titik)"]
+    B --> C["Polygon Boundary<br/>Masking<br/>(3 Region)"]
+    C --> D["Skin Filter<br/>YCrCb<br/>(Cr: 133–173,<br/>Cb: 77–127)"]
+    D --> E["Rata-Rata RGB<br/>per Frame"]
+
+    style A fill:#ECEFF1,stroke:#546E7A
+    style B fill:#E3F2FD,stroke:#1565C0
+    style C fill:#E3F2FD,stroke:#1565C0
+    style D fill:#E3F2FD,stroke:#1565C0
+    style E fill:#E3F2FD,stroke:#1565C0
+        </div>
+    </div>
+    <div class="diagram-caption">Gambar 2 — Sub-proses Fase Computer Vision</div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Langkah</th>
+                <th>Deskripsi</th>
+                <th>Detail Implementasi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Pemetaan Landmark</td>
+                <td>Mendeteksi 478 titik landmark wajah pada setiap frame</td>
+                <td>MediaPipe FaceLandmarker (float16), <code>min_detection_confidence = 0.5</code></td>
+            </tr>
+            <tr>
+                <td>Isolasi ROI</td>
+                <td>Membuat 3 region polygon dari subset landmark tertentu</td>
+                <td><b>Dahi</b>: 12 titik boundary, <b>Pipi Kiri</b>: 9 titik, <b>Pipi Kanan</b>: 9 titik (mirror simetris)</td>
+            </tr>
+            <tr>
+                <td>Skin Filtering</td>
+                <td>Memfilter hanya piksel kulit valid dalam setiap region</td>
+                <td>Konversi BGR → YCrCb, threshold: Y: 0–255, Cr: 133–173, Cb: 77–127</td>
+            </tr>
+            <tr>
+                <td>Rata-Rata Spasial</td>
+                <td>Menghitung nilai rata-rata R, G, B dari piksel kulit valid</td>
+                <td>Gabungan mask polygon + skin; fallback ke seluruh polygon jika piksel kulit &lt; 10</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 3. FASE PEMROSESAN SINYAL ===== -->
+    <h3><span class="phase-badge signal">Fase 2</span> Pemrosesan Sinyal</h3>
+
+    <div class="diagram-wrapper">
+        <div class="mermaid">
+flowchart LR
+    A["Sinyal RGB<br/>(N × 3)"] --> B["Normalisasi<br/>Temporal"]
+    B --> C["Proyeksi POS<br/>[0, 1, -1]<br/>[-2, 1, 1]"]
+    C --> D["Overlap-Add<br/>Windowing<br/>(1.6 detik)"]
+    D --> E["Bandpass<br/>Butterworth<br/>0.7–4.0 Hz"]
+    E --> F["Sinyal BVP<br/>Bersih"]
+
+    style A fill:#ECEFF1,stroke:#546E7A
+    style B fill:#FFF3E0,stroke:#E65100
+    style C fill:#FFF3E0,stroke:#E65100
+    style D fill:#FFF3E0,stroke:#E65100
+    style E fill:#FFF3E0,stroke:#E65100
+    style F fill:#FFF3E0,stroke:#E65100
+        </div>
+    </div>
+    <div class="diagram-caption">Gambar 3 — Sub-proses Fase Pemrosesan Sinyal</div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Langkah</th>
+                <th>Deskripsi</th>
+                <th>Detail Implementasi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Algoritma POS</td>
+                <td>Plane-Orthogonal-to-Skin — memproyeksikan sinyal RGB ke bidang ortogonal terhadap variasi warna kulit</td>
+                <td>Matriks proyeksi <code>[[0, 1, -1], [-2, 1, 1]]</code>, alpha adaptif berdasarkan rasio standar deviasi</td>
+            </tr>
+            <tr>
+                <td>Overlap-Add</td>
+                <td>Menggabungkan hasil proyeksi dari window kecil yang saling tumpang tindih</td>
+                <td>Window = 1.6 detik, step = 1 frame, akumulasi dengan pembobotan</td>
+            </tr>
+            <tr>
+                <td>Bandpass Filter</td>
+                <td>Mempertahankan hanya komponen frekuensi detak jantung (42–240 BPM)</td>
+                <td>Butterworth order 4, zero-phase (<code>sosfiltfilt</code>), range: <b>0.7 – 4.0 Hz</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 4. FASE EKSTRAKSI FITUR ===== -->
+    <div class="page-break"></div>
+    <h3><span class="phase-badge feature">Fase 3</span> Ekstraksi Fitur</h3>
+
+    <div class="diagram-wrapper">
+        <div class="mermaid">
+flowchart LR
+    A["Sinyal BVP<br/>Bersih"] --> B["Sliding Window<br/>60 detik"]
+    B --> C["Deteksi Puncak<br/>& Validasi IBI"]
+    C --> D["Fitur<br/>Time-Domain"]
+    C --> E["Fitur<br/>Freq-Domain"]
+    C --> F["Fitur<br/>Non-Linear"]
+
+    style A fill:#ECEFF1,stroke:#546E7A
+    style B fill:#F3E5F5,stroke:#7B1FA2
+    style C fill:#F3E5F5,stroke:#7B1FA2
+    style D fill:#F3E5F5,stroke:#7B1FA2
+    style E fill:#F3E5F5,stroke:#7B1FA2
+    style F fill:#F3E5F5,stroke:#7B1FA2
+        </div>
+    </div>
+    <div class="diagram-caption">Gambar 4 — Sub-proses Fase Ekstraksi Fitur</div>
+
+    <h4>Daftar Fitur yang Diekstrak</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Domain</th>
+                <th>Fitur</th>
+                <th>Satuan</th>
+                <th>Deskripsi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="10" class="domain-label">Time-Domain</td>
+                <td><code>mean_hr_bpm</code></td>
+                <td>BPM</td>
+                <td>Detak jantung rata-rata dari analisis PSD</td>
+            </tr>
+            <tr>
+                <td><code>prv_mean_hr_bpm</code></td>
+                <td>BPM</td>
+                <td>Detak jantung rata-rata dari IBI</td>
+            </tr>
+            <tr>
+                <td><code>prv_min_hr_bpm</code></td>
+                <td>BPM</td>
+                <td>Detak jantung minimum</td>
+            </tr>
+            <tr>
+                <td><code>prv_max_hr_bpm</code></td>
+                <td>BPM</td>
+                <td>Detak jantung maksimum</td>
+            </tr>
+            <tr>
+                <td><code>ibi_mean_ms</code></td>
+                <td>ms</td>
+                <td>Rata-rata interval antar-detak</td>
+            </tr>
+            <tr>
+                <td><code>ibi_median_ms</code></td>
+                <td>ms</td>
+                <td>Median interval antar-detak</td>
+            </tr>
+            <tr>
+                <td><code>ibi_std_ms</code></td>
+                <td>ms</td>
+                <td>Standar deviasi IBI</td>
+            </tr>
+            <tr>
+                <td><code>sdnn_ms</code></td>
+                <td>ms</td>
+                <td>Standar deviasi dari seluruh interval NN</td>
+            </tr>
+            <tr>
+                <td><code>rmssd_ms</code></td>
+                <td>ms</td>
+                <td>Root Mean Square of Successive Differences</td>
+            </tr>
+            <tr>
+                <td><code>pnn50</code></td>
+                <td>rasio</td>
+                <td>Proporsi IBI berurutan yang berbeda &gt; 50 ms</td>
+            </tr>
+            <tr>
+                <td rowspan="4" class="domain-label">Frequency-Domain</td>
+                <td><code>lf_power</code></td>
+                <td>ms²</td>
+                <td>Power pada Low Frequency band (0.04–0.15 Hz)</td>
+            </tr>
+            <tr>
+                <td><code>hf_power</code></td>
+                <td>ms²</td>
+                <td>Power pada High Frequency band (0.15–0.40 Hz)</td>
+            </tr>
+            <tr>
+                <td><code>lf_hf_ratio</code></td>
+                <td>rasio</td>
+                <td>Rasio LF/HF — indikator keseimbangan otonom</td>
+            </tr>
+            <tr>
+                <td><code>total_power</code></td>
+                <td>ms²</td>
+                <td>Total power pada band 0.04–0.40 Hz</td>
+            </tr>
+            <tr>
+                <td rowspan="3" class="domain-label">Non-Linear</td>
+                <td><code>sd1_ms</code></td>
+                <td>ms</td>
+                <td>Poincaré SD1 — variabilitas jangka pendek</td>
+            </tr>
+            <tr>
+                <td><code>sd2_ms</code></td>
+                <td>ms</td>
+                <td>Poincaré SD2 — variabilitas jangka panjang</td>
+            </tr>
+            <tr>
+                <td><code>sd1_sd2_ratio</code></td>
+                <td>rasio</td>
+                <td>Rasio SD1/SD2</td>
+            </tr>
+            <tr>
+                <td rowspan="5" class="domain-label">Quality</td>
+                <td><code>snr_proxy</code></td>
+                <td>0–1</td>
+                <td>Proxy kualitas sinyal berbasis dominansi puncak PSD</td>
+            </tr>
+            <tr>
+                <td><code>hr_psd_quality</code></td>
+                <td>0–1</td>
+                <td>Kualitas estimasi HR dari PSD</td>
+            </tr>
+            <tr>
+                <td><code>n_peaks</code></td>
+                <td>count</td>
+                <td>Jumlah puncak yang terdeteksi</td>
+            </tr>
+            <tr>
+                <td><code>peak_rate_per_sec</code></td>
+                <td>Hz</td>
+                <td>Laju deteksi puncak per detik</td>
+            </tr>
+            <tr>
+                <td><code>detection_rate</code></td>
+                <td>0–1</td>
+                <td>Proporsi frame dengan wajah terdeteksi</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="note-box">
+        <strong>Catatan:</strong> Fitur <code>detection_rate</code>, <code>snr_proxy</code>, <code>hr_psd_quality</code>, dan <code>fps</code> dikecualikan dari input model klasifikasi agar model hanya belajar pola fisiologis, bukan kualitas kamera.
+    </div>
+
+    <!-- ===== 5. FASE ML & OUTPUT ===== -->
+    <h3><span class="phase-badge ml">Fase 4</span> Machine Learning &amp; Output</h3>
+
+    <div class="diagram-wrapper">
+        <div class="mermaid">
+flowchart TD
+    FEAT["Vektor Fitur per Window"] --> IMP["SimpleImputer (Median)"]
+    IMP --> SCALE["StandardScaler (Z-Score)"]
+    SCALE --> RF["RandomForestClassifier<br/>(300 trees, balanced_subsample,<br/>min_samples_leaf=2)"]
+    RF --> PRED["Prediksi Kelas +<br/>Probability Score"]
+
+    style FEAT fill:#ECEFF1,stroke:#546E7A
+    style IMP fill:#E8F5E9,stroke:#2E7D32
+    style SCALE fill:#E8F5E9,stroke:#2E7D32
+    style RF fill:#E8F5E9,stroke:#2E7D32
+    style PRED fill:#C8E6C9,stroke:#2E7D32
+        </div>
+    </div>
+    <div class="diagram-caption">Gambar 5 — Pipeline Machine Learning</div>
+
+    <h4>Tabel Output Klasifikasi</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Kelas</th>
+                <th>Label</th>
+                <th>Kondisi Asli</th>
+                <th>Deskripsi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>0</b></td>
+                <td>Normal</td>
+                <td>Rest (T1)</td>
+                <td>Kondisi istirahat, baseline fisiologis</td>
+            </tr>
+            <tr>
+                <td><b>1</b></td>
+                <td>Moderate Arousal</td>
+                <td>Speech (T2)</td>
+                <td>Stres ringan–sedang akibat tugas berbicara</td>
+            </tr>
+            <tr>
+                <td><b>2</b></td>
+                <td>High Arousal</td>
+                <td>Arithmetic (T3)</td>
+                <td>Stres tinggi akibat tugas aritmatika mental</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4>Gate Keputusan Output</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Gate</th>
+                <th>Threshold</th>
+                <th>Jika Gagal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Kualitas Sinyal</td>
+                <td>&gt; 0.60</td>
+                <td>→ "Poor Signal" (ulangi akuisisi)</td>
+            </tr>
+            <tr>
+                <td>Detection Rate</td>
+                <td>≥ 0.90</td>
+                <td>→ "Face Not Stable" (reposisi wajah)</td>
+            </tr>
+            <tr>
+                <td>Confidence + Quality</td>
+                <td>Confidence ≥ 0.60 DAN Quality ≥ 0.70</td>
+                <td>→ "Uncertain" (hasil + peringatan)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4>Validasi Model</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Metode</th>
+                <th>Deskripsi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Subject-Independent Split</td>
+                <td>Train/Validation/Test dipisah berdasarkan subjek (tidak ada subjek yang overlap)</td>
+            </tr>
+            <tr>
+                <td>Leave-One-Subject-Out (LOSO)</td>
+                <td>Setiap subjek dijadikan test set secara bergantian untuk evaluasi yang lebih robust</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 6. CATATAN KOREKSI ===== -->
+    <div class="page-break"></div>
+    <h2>3. Catatan Koreksi dari Flowchart Sebelumnya</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Item Lama</th>
+                <th>Koreksi</th>
+                <th>Alasan</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td><span class="correction-old">Ip 13, 5 Subjek</span></td>
+                <td><span class="correction-new">Dataset UBFC-Phys, N Subjek</span></td>
+                <td>Kode menggunakan dataset UBFC-Phys</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><span class="correction-old">Baseline, Olahraga, Kafein</span></td>
+                <td><span class="correction-new">Rest (T1), Speech (T2), Arithmetic (T3)</span></td>
+                <td>Kondisi sesuai protokol UBFC-Phys</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td><span class="correction-old">Jarak 35/45/55 cm</span></td>
+                <td><span class="correction-new">Dihapus (estimasi otomatis)</span></td>
+                <td>Jarak bukan variabel kontrol di kode</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td><span class="correction-old">Convex Hull Masking</span></td>
+                <td><span class="correction-new">Polygon Boundary Masking per-Region</span></td>
+                <td>Kode menggunakan polygon fill dari titik boundary, bukan convex hull</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td><span class="correction-old">RGB ke YCgCr</span></td>
+                <td><span class="correction-new">BGR ke YCrCb</span></td>
+                <td>YCgCr bukan ruang warna standar; kode menggunakan <code>cv2.COLOR_BGR2YCrCb</code></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td><span class="correction-old">Bandpass 0.7 – 2.5 Hz</span></td>
+                <td><span class="correction-new">Bandpass 0.7 – 4.0 Hz</span></td>
+                <td>Sesuai konfigurasi <code>bandpass_high_hz: 4.0</code></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td><span class="correction-old">7 Fitur (HR, HRV, SD_HR, RMSSD, Ups, Downs, Cycles)</span></td>
+                <td><span class="correction-new">22+ Fitur multi-domain (time, freq, non-linear, quality)</span></td>
+                <td>Kode mengekstrak fitur dari 4 domain berbeda</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td><span class="correction-old">Flowchart berhenti di "Kualitas > 0.60?"</span></td>
+                <td><span class="correction-new">Dilanjutkan: 3 gate keputusan + loop monitoring</span></td>
+                <td>Alur lengkap mencakup detection rate, confidence check, dan display HUD</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'base',
+        themeVariables: {
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '13px',
+            primaryColor: '#E3F2FD',
+            primaryBorderColor: '#1565C0',
+            primaryTextColor: '#1e293b',
+            lineColor: '#64748b',
+            secondaryColor: '#FFF3E0',
+            tertiaryColor: '#F3E5F5'
+        },
+        flowchart: {
+            htmlLabels: true,
+            curve: 'basis',
+            nodeSpacing: 30,
+            rankSpacing: 40,
+            padding: 12
+        }
+    });
+</script>
+
+</body>
+</html>

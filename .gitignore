@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+data/raw/
+data/*.mp4
+models/*.joblib
+results/*.png
