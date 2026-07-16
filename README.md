@@ -8,12 +8,77 @@ Academic pipeline for estimating physiological stress from facial videos using r
 
 ```mermaid
 graph TD
-    A[Face Video] --> B(Facial ROI Detection)
-    B --> C(ROI RGB Time Series)
-    C --> D{rPPG Algorithms: GREEN/CHROM/POS}
-    D --> E[BVP, HR, and PRV/HRV Features]
-    E --> F((Subject-independent Stress Classification))
-    F --> G[Evaluation & Real-time Demo]
+    START(("Start"))
+
+    START --> INPUT["<b>Input:</b> Facial Video Recording<br/>(UBFC-Phys Dataset, N Subjects)"]
+
+    INPUT --> SCENARIO["<b>Scenario Setting:</b><br/>Physiological Conditions<br/>(Rest/T1, Speech/T2, Arithmetic/T3)"]
+
+    SCENARIO --> LANDMARK["478 Facial Landmark Mapping<br/>(MediaPipe FaceLandmarker)"]
+
+    LANDMARK --> ROI["Facial ROI Isolation via<br/>Per-Region Polygon Boundary Masking<br/>(Forehead, Left Cheek, Right Cheek)"]
+
+    ROI --> SKIN["Skin Filtering via<br/>BGR to YCrCb Color Space Conversion"]
+
+    SKIN --> MEAN_RGB["Spatial RGB Average Computation<br/>of Valid Skin Pixels per Frame"]
+
+    MEAN_RGB --> POS["Raw BVP Signal Extraction<br/>via POS Algorithm<br/>(1.6s Overlap-Add Windowing)"]
+
+    POS --> BPF["Signal Filtering<br/>(Butterworth Bandpass Filter<br/>0.7 – 4.0 Hz, Order 4, Zero-Phase SOS)"]
+
+    BPF --> SEG["Signal Segmentation<br/>(60s Sliding Window, 10s Step)"]
+
+    SEG --> PEAK["Peak Detection &<br/>IBI Boundary Validation (0.30 – 2.00s)"]
+
+    PEAK --> BEAT_CHECK{"Beat Count<br/>≥ 10?"}
+
+    BEAT_CHECK -- Yes --> FEAT["Multi-Domain PRV/HRV<br/>Feature Computation"]
+    BEAT_CHECK -- No --> FEAT_NAN["Set PRV/HRV Features = NaN"]
+
+    FEAT --> QC{"Signal Quality<br/>> 0.60?"}
+    FEAT_NAN --> QC
+
+    QC -- No --> OUT_POOR["Output: Poor Signal"]
+    QC -- Yes --> DET{"Detection Rate<br/>≥ 0.90?"}
+
+    DET -- No --> OUT_FACE["Output: Face Not Stable"]
+    DET -- Yes --> RF["Stress Level Classification<br/>(Random Forest, 300 Trees)<br/>Pipeline: Imputer → Scaler → RF"]
+
+    RF --> CONF{"Confidence ≥ 0.60<br/>AND Quality ≥ 0.70?"}
+
+    CONF -- Yes --> OUT_FINAL["<b>Final Classification Output:</b><br/>Normal / Moderate / High Arousal"]
+    CONF -- No --> OUT_UNCERTAIN["Output: Uncertain"]
+
+    OUT_FINAL --> DISPLAY["Display Results on HUD"]
+    OUT_UNCERTAIN --> DISPLAY
+
+    OUT_POOR --> RETRY["Retry Signal Acquisition"]
+    OUT_FACE --> RETRY
+
+    DISPLAY --> LOOP{"Continue<br/>Monitoring?"}
+    LOOP -- Yes --> RETRY
+    LOOP -- No --> STOP(("End"))
+    RETRY --> SEG
+
+    %% Style Customization
+    style START fill:#4CAF50,stroke:#388E3C,color:#fff
+    style STOP fill:#F44336,stroke:#D32F2F,color:#fff
+    style LANDMARK fill:#E3F2FD,stroke:#1565C0
+    style ROI fill:#E3F2FD,stroke:#1565C0
+    style SKIN fill:#E3F2FD,stroke:#1565C0
+    style MEAN_RGB fill:#E3F2FD,stroke:#1565C0
+    style POS fill:#FFF3E0,stroke:#E65100
+    style BPF fill:#FFF3E0,stroke:#E65100
+    style SEG fill:#F3E5F5,stroke:#7B1FA2
+    style PEAK fill:#F3E5F5,stroke:#7B1FA2
+    style FEAT fill:#F3E5F5,stroke:#7B1FA2
+    style FEAT_NAN fill:#FFEBEE,stroke:#C62828
+    style RF fill:#E8F5E9,stroke:#2E7D32
+    style OUT_FINAL fill:#C8E6C9,stroke:#2E7D32,color:#1B5E20
+    style OUT_UNCERTAIN fill:#FFF9C4,stroke:#F9A825,color:#6D4C00
+    style OUT_POOR fill:#FFCDD2,stroke:#C62828,color:#B71C1C
+    style OUT_FACE fill:#FFCDD2,stroke:#C62828,color:#B71C1C
+    style DISPLAY fill:#E0F7FA,stroke:#00838F
 ```
 
 ## Key Features
@@ -198,38 +263,5 @@ The demo displays heart rate, estimated stress class, confidence, signal quality
 - Report the rPPG method, ROI backend, window size, split seed, subject IDs per split, and any excluded videos.
 - Do not rely on HR alone. Prefer PRV/HRV features such as SDNN, RMSSD, pNN50, LF, HF, LF/HF, and signal-quality measures.
 - When possible, compare video-derived BVP with contact BVP/PPG/ECG/EDA references.
-
-## 10. Project Structure
-
-```text
-rppg_stress_project/
-  backend/
-    main.py
-    api/
-    schemas/
-    services/
-  config/default.yaml
-  data/manifest_example.csv
-  frontend/
-    package.json
-    src/
-  requirements.txt
-  pyproject.toml
-  scripts/
-    00_make_manifest.py
-    01_extract_features.py
-    02_train_stress_classifier.py
-    03_realtime_demo.py
-    04_evaluate_model.py
-  src/rppg_stress/
-    dataset.py
-    evaluation.py
-    features.py
-    ml.py
-    roi.py
-    rppg_algorithms.py
-    signal_processing.py
-    utils.py
-    video_io.py
-  tests/
-```
+<img width="1279" height="735" alt="Screenshot 2026-06-10 075222" src="https://github.com/user-attachments/assets/fef28116-1af7-494e-8ff8-7c88ba91c4bb" />
+<img width="1279" height="735" alt="Screenshot 2026-06-10 075222" src="https://github.com/user-attachments/assets/6f68612a-d31d-4f43-837b-7d6999155547" />
